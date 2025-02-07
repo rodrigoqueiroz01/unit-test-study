@@ -1,5 +1,6 @@
 package br.com.udemy.math;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,14 +15,18 @@ class SimpleMathTest {
     @Test
     @DisplayName("Test 6.2 + 2 = 8.2")
     void testShouldReturnSumOfTwoValues() {
-        var math = new SimpleMath();
         var firstNumber = 6.2D;
         var secondNumber = 2D;
-
         var expected = 8.2D;
-        var actual = math.sum(6.2D, 2D);
         var messageSupplier = format("%1$,.1f + %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
+        // Given / Arrange - dado um determinado contexto (tem-se determinada reação)
+        var math = new SimpleMath();
+
+        // When / Act - quando ocorrer a ação
+        var actual = math.sum(firstNumber, secondNumber);
+
+        // Then / Assert - valida o retorno esperado
         assertEquals(expected, actual, () -> messageSupplier);
     }
 
@@ -92,6 +97,13 @@ class SimpleMathTest {
         var messageSupplier = format("Square root of %1$,.1f did not produce %2$,.1f", number, expected);
 
         assertEquals(expected, actual, () -> messageSupplier);
+    }
+
+    @Disabled("TODO We need still work on it!")
+    @Test
+    @DisplayName("Test Division by Zero")
+    void testDivisionByZero() {
+        fail();
     }
 
 }
