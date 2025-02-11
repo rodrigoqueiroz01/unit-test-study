@@ -1,14 +1,36 @@
 package br.com.udemy.math;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test Math Operations in SimpleMath Class")
 class SimpleMathTest {
+
+    SimpleMath math;
+
+    @BeforeAll
+    static void setup() {
+        System.out.println("Running @BeforeAll method!");
+    }
+
+    @AfterAll
+    static void cleanup() {
+        System.out.println("Running @AfterAll method!");
+    }
+
+    @BeforeEach
+    void beforeEachMethod() {
+        math = new SimpleMath();
+        System.out.println("Running @BeforeEach method!");
+    }
+
+
+    @AfterEach
+    void AfterEachMethod() {
+        System.out.println("Running @AfterEach method!");
+    }
 
     // Padrão de nomenclatura dos métodos de teste: test[SistemaEmTeste][CondicaoOuMudancaDeEstado][ResultadoEsperado]
 
@@ -20,8 +42,7 @@ class SimpleMathTest {
         var expected = 8.2D;
         var message = format("%1$,.1f + %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
-        // Given / Arrange - dado um determinado contexto (tem-se determinada reação)
-        var math = new SimpleMath();
+        System.out.println("teste soma");
 
         // When / Act - quando ocorrer a ação
         var actual = math.sum(firstNumber, secondNumber);
@@ -38,7 +59,8 @@ class SimpleMathTest {
         var expected = 4.2D;
         var message = format("%1$,.1f - %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
-        var math = new SimpleMath();
+        System.out.println("teste subtração");
+
         var actual = math.subtraction(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
@@ -51,7 +73,8 @@ class SimpleMathTest {
         var expected = 12.4D;
         var message = format("%1$,.1f * %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
-        var math = new SimpleMath();
+        System.out.println("teste multiplicação");
+
         var actual = math.multiplication(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
@@ -64,7 +87,8 @@ class SimpleMathTest {
         var expected = 3.1D;
         var message = format("%1$,.1f / %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
-        var math = new SimpleMath();
+        System.out.println("teste divisão");
+
         var actual = math.division(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
@@ -77,7 +101,8 @@ class SimpleMathTest {
         var expected = 4.1D;
         var message = format("(%1$,.1f + %2$,.1f) / 2 did not produce %3$,.1f", firstNumber, secondNumber, expected);
 
-        var math = new SimpleMath();
+        System.out.println("teste média");
+
         var actual = math.mean(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
@@ -89,16 +114,24 @@ class SimpleMathTest {
         var expected = 2.4899799195977463D;
         var message = format("Square root of %1$,.1f did not produce %2$,.1f", number, expected);
 
-        var math = new SimpleMath();
+        System.out.println("teste raiz quadrada");
+
         var actual = math.squareRoot(number);
         assertEquals(expected, actual, () -> message);
     }
 
-    @Disabled("TODO We need still work on it!")
     @Test
     @DisplayName("Test Division by Zero")
     void testDivisionByZero() {
-        fail();
+        var firstNumber = 6.2D;
+        var secondNumber = 2D;
+        var expectedMessage = "Impossible to divise by zero!";
+
+        var actual = assertThrows(ArithmeticException.class, () -> {
+            math.division(firstNumber, secondNumber);
+        }, () -> "Division by zero should throw an ArithmeticException");
+
+        assertEquals(expectedMessage, actual.getMessage(), () -> "Unexpected Arithmetic Exception");
     }
 
 }
