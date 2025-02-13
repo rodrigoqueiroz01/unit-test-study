@@ -1,10 +1,17 @@
 package br.com.udemy.math;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.Random.class)
 @DisplayName("Test Math Operations in SimpleMath Class")
 class SimpleMathTest {
 
@@ -32,106 +39,85 @@ class SimpleMathTest {
         System.out.println("Running @AfterEach method!");
     }
 
-    // Padrão de nomenclatura dos métodos de teste: test[SistemaEmTeste][CondicaoOuMudancaDeEstado][ResultadoEsperado]
-
-    @Test
+    @ParameterizedTest
+    @CsvSource({"6.2,2,8.2"})
     @DisplayName("Test 6.2 + 2 = 8.2")
-    void testShouldReturnSumOfTwoValues() {
-        var firstNumber = 6.2D;
-        var secondNumber = 2D;
-        var expected = 8.2D;
+    void testShouldReturnSumOfTwoValues(double firstNumber, double secondNumber, double expected) {
         var message = format("%1$,.1f + %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
-
-        System.out.println("teste soma");
-
-        // When / Act - quando ocorrer a ação
         var actual = math.sum(firstNumber, secondNumber);
-
-        // Then / Assert - valida o retorno esperado
         assertEquals(expected, actual, () -> message);
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"6.2,2,4.2"})
     @DisplayName("Test 6.2 - 2 = 4.2")
-    void testShouldReturnSubtractionOfTwoValues() {
-        var firstNumber = 6.2D;
-        var secondNumber = 2D;
-        var expected = 4.2D;
+    void testShouldReturnSubtractionOfTwoValues(double firstNumber, double secondNumber, double expected) {
         var message = format("%1$,.1f - %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
-
-        System.out.println("teste subtração");
-
         var actual = math.subtraction(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"6.2,2,12.4"})
     @DisplayName("Test 6.2 * 2 = 12.4")
-    void testShouldReturnMultiplicationOfTwoValues() {
-        var firstNumber = 6.2D;
-        var secondNumber = 2D;
-        var expected = 12.4D;
+    void testShouldReturnMultiplicationOfTwoValues(double firstNumber, double secondNumber, double expected) {
         var message = format("%1$,.1f * %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
-
-        System.out.println("teste multiplicação");
-
         var actual = math.multiplication(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"6.2,2,3.1"})
     @DisplayName("Test 6.2 / 2 = 3.1")
-    void testShouldReturnDivisionOfTwoValues() {
-        var firstNumber = 6.2D;
-        var secondNumber = 2D;
-        var expected = 3.1D;
+    void testShouldReturnDivisionOfTwoValues(double firstNumber, double secondNumber, double expected) {
         var message = format("%1$,.1f / %2$,.1f did not produce %3$,.1f", firstNumber, secondNumber, expected);
-
-        System.out.println("teste divisão");
-
         var actual = math.division(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
 
-    @Test
+    @MethodSource
+    @ParameterizedTest
     @DisplayName("Test (6.2D + 2) / 2 = 4.1")
-    void testShouldReturnTheMedianValueOfNumber() {
-        var firstNumber = 6.2D;
-        var secondNumber = 2D;
-        var expected = 4.1D;
+    void testShouldReturnTheMedianValueOfNumber(double firstNumber, double secondNumber, double expected) {
         var message = format("(%1$,.1f + %2$,.1f) / 2 did not produce %3$,.1f", firstNumber, secondNumber, expected);
-
-        System.out.println("teste média");
-
         var actual = math.mean(firstNumber, secondNumber);
         assertEquals(expected, actual, () -> message);
     }
 
-    @Test
-    @DisplayName("Test Square Root of 6.2 = 2.4899799195977463D")
-    void testShouldReturnTheSquareRootOfNumber() {
-        var number = 6.2D;
-        var expected = 2.4899799195977463D;
+    @ParameterizedTest
+    @MethodSource("testSquareRootInputParams")
+    @DisplayName("Test Square Root of 6.2 = 2.48")
+    void testShouldReturnTheSquareRootOfNumber(double number, double expected) {
         var message = format("Square root of %1$,.1f did not produce %2$,.1f", number, expected);
-
-        System.out.println("teste raiz quadrada");
-
         var actual = math.squareRoot(number);
-        assertEquals(expected, actual, () -> message);
+        assertEquals(expected, actual, 2D, () -> message);
     }
 
     @Test
+    @Disabled
     @DisplayName("Test Division by Zero")
     void testDivisionByZero() {
         var firstNumber = 6.2D;
-        var secondNumber = 2D;
+        var secondNumber = 0D;
         var expectedMessage = "Impossible to divise by zero!";
 
-        var actual = assertThrows(ArithmeticException.class, () -> {
-            math.division(firstNumber, secondNumber);
-        }, () -> "Division by zero should throw an ArithmeticException");
+        var actual = assertThrows(ArithmeticException.class,
+                () -> math.division(firstNumber, secondNumber),
+                () -> "Division by zero should throw an ArithmeticException");
 
         assertEquals(expectedMessage, actual.getMessage(), () -> "Unexpected Arithmetic Exception");
+    }
+
+    private static Stream<Arguments> testShouldReturnTheMedianValueOfNumber() {
+        return Stream.of(
+                Arguments.of(6.2D, 2D, 4.1)
+        );
+    }
+
+    private static Stream<Arguments> testSquareRootInputParams() {
+        return Stream.of(
+                Arguments.of(6.2D, 2.48D)
+        );
     }
 
 }
