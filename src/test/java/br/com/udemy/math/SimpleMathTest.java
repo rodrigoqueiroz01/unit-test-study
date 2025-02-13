@@ -33,7 +33,6 @@ class SimpleMathTest {
         System.out.println("Running @BeforeEach method!");
     }
 
-
     @AfterEach
     void AfterEachMethod() {
         System.out.println("Running @AfterEach method!");
